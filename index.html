@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ayush Ranjan — Backend Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ──────────────── TOKENS ──────────────── */
+  :root {
+    --bg:        #080b0f;
+    --bg2:       #0d1117;
+    --bg3:       #111820;
+    --surface:   #161d28;
+    --border:    rgba(255,255,255,0.07);
+    --border2:   rgba(255,255,255,0.12);
+    --accent:    #00e5ff;
+    --accent2:   #0066ff;
+    --accent3:   #7c3aed;
+    --green:     #00d97e;
+    --text:      #e8edf5;
+    --muted:     #7a8899;
+    --muted2:    #a0aaba;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'Instrument Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --r:         12px;
+    --r2:        20px;
+  }
+
+  /* ──────────────── RESET ──────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  /* ──────────────── NOISE OVERLAY ──────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ──────────────── NAV ──────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(8,11,15,0.75);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    transition: padding .3s;
+  }
+  nav.scrolled { padding: 14px 40px; }
+  .nav-logo {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--muted);
+    transition: color .2s;
+    font-family: var(--font-mono);
+    letter-spacing: .02em;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    font-family: var(--font-mono);
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--accent);
+    border: 1px solid rgba(0,229,255,.3);
+    padding: 8px 18px;
+    border-radius: 6px;
+    transition: background .2s, box-shadow .2s;
+  }
+  .nav-cta:hover {
+    background: rgba(0,229,255,.08);
+    box-shadow: 0 0 20px rgba(0,229,255,.15);
+  }
+  .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); transition: .3s; }
+
+  /* ──────────────── HERO ──────────────── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  }
+  .hero-glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,102,255,.12) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+  }
+  .hero-glow2 {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,229,255,.07) 0%, transparent 70%);
+    bottom: 0; left: -80px;
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,217,126,.08);
+    border: 1px solid rgba(0,217,126,.2);
+    border-radius: 100px;
+    padding: 6px 14px;
+    margin-bottom: 32px;
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    color: var(--green);
+    letter-spacing: .05em;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: .4; transform: scale(1.4); }
+  }
+  .hero-name {
+    font-family: var(--font-head);
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  .hero-name em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-role {
+    font-family: var(--font-mono);
+    font-size: .9rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+    letter-spacing: .04em;
+  }
+  .hero-role span { color: var(--accent); }
+  .hero-headline {
+    font-family: var(--font-head);
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--text);
+    max-width: 640px;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted2);
+    max-width: 540px;
+    margin-bottom: 44px;
+    line-height: 1.7;
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: #fff;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: .9rem;
+    padding: 14px 28px;
+    border-radius: var(--r);
+    transition: opacity .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 24px rgba(0,102,255,.35);
+    letter-spacing: .01em;
+  }
+  .btn-primary:hover { opacity: .9; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,102,255,.45); }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: .9rem;
+    padding: 14px 28px;
+    border-radius: var(--r);
+    transition: background .2s, transform .2s, border-color .2s;
+    background: rgba(255,255,255,.02);
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,.06);
+    border-color: var(--border2);
+    transform: translateY(-2px);
+  }
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat { display: flex; flex-direction: column; gap: 4px; }
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+  }
+  .stat-num span { color: var(--accent); }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: .75rem;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  /* ──────────────── SECTION COMMON ──────────────── */
+  section { padding: 100px 40px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    color: var(--accent);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: .4;
+  }
+  .section-title {
+    font-family: var(--font-head);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    color: var(--muted2);
+    font-size: 1.05rem;
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  /* ──────────────── FOCUS SECTION ──────────────── */
+  #focus { background: var(--bg2); }
+  .focus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .focus-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .3s, transform .3s;
+  }
+  .focus-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .focus-card:hover { border-color: var(--border2); transform: translateY(-4px); }
+  .focus-card:hover::before { opacity: 1; }
+  .focus-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    background: rgba(0,229,255,.08);
+    border: 1px solid rgba(0,229,255,.15);
+  }
+  .focus-card h3 {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+  }
+  .focus-card p { font-size: .9rem; color: var(--muted2); line-height: 1.65; }
+  .focus-metric {
+    margin-top: 20px;
+    font-family: var(--font-mono);
+    font-size: .75rem;
+    color: var(--green);
+    background: rgba(0,217,126,.07);
+    border: 1px solid rgba(0,217,126,.15);
+    border-radius: 6px;
+    padding: 6px 12px;
+    display: inline-block;
+  }
+
+  /* ──────────────── TECH STACK ──────────────── */
+  #stack { background: var(--bg); }
+  .stack-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+  }
+  .stack-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 28px;
+    transition: border-color .3s;
+  }
+  .stack-group:hover { border-color: var(--border2); }
+  .group-label {
+    font-family: var(--font-mono);
+    font-size: .7rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .group-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .tech-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-family: var(--font-mono);
+    font-size: .8rem;
+    color: var(--text);
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    transition: background .2s, border-color .2s, color .2s;
+    cursor: default;
+  }
+  .pill:hover {
+    background: rgba(0,229,255,.08);
+    border-color: rgba(0,229,255,.25);
+    color: var(--accent);
+  }
+  .pill.primary {
+    background: rgba(0,102,255,.1);
+    border-color: rgba(0,102,255,.25);
+    color: #6ea8ff;
+  }
+
+  /* ──────────────── PROJECTS ──────────────── */
+  #projects { background: var(--bg2); }
+  .projects-list { display: flex; flex-direction: column; gap: 28px; }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    transition: border-color .3s, transform .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--accent2), var(--accent));
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .project-card:hover { border-color: var(--border2); transform: translateX(4px); }
+  .project-card:hover::after { opacity: 1; }
+  .project-card.ongoing::after { background: linear-gradient(180deg, var(--accent3), #a855f7); }
+  .proj-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .proj-num {
+    font-family: var(--font-mono);
+    font-size: .75rem;
+    color: var(--muted);
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .proj-name {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+  .proj-tag {
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid;
+    margin-top: 4px;
+  }
+  .proj-tag.backend { background: rgba(0,229,255,.07); border-color: rgba(0,229,255,.2); color: var(--accent); }
+  .proj-tag.ongoing { background: rgba(124,58,237,.1); border-color: rgba(124,58,237,.3); color: #a78bfa; }
+  .proj-tag.fullstack { background: rgba(0,102,255,.08); border-color: rgba(0,102,255,.25); color: #6ea8ff; }
+  .proj-desc { color: var(--muted2); font-size: .95rem; line-height: 1.7; margin-bottom: 20px; }
+  .proj-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .feat {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: .85rem;
+    color: var(--muted2);
+    line-height: 1.4;
+  }
+  .feat::before {
+    content: '▸';
+    color: var(--accent);
+    font-size: .7rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .proj-tech { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .tech-tag {
+    font-family: var(--font-mono);
+    font-size: .75rem;
+    color: var(--muted);
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+  }
+  .proj-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .proj-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: .8rem;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 1px solid;
+    transition: background .2s, transform .2s;
+  }
+  .proj-btn.live {
+    background: rgba(0,102,255,.12);
+    border-color: rgba(0,102,255,.3);
+    color: #6ea8ff;
+  }
+  .proj-btn.live:hover { background: rgba(0,102,255,.22); transform: translateY(-1px); }
+  .proj-btn.github {
+    background: rgba(255,255,255,.04);
+    border-color: var(--border2);
+    color: var(--muted2);
+  }
+  .proj-btn.github:hover { background: rgba(255,255,255,.1); transform: translateY(-1px); }
+  .proj-btn.wip {
+    background: rgba(124,58,237,.1);
+    border-color: rgba(124,58,237,.25);
+    color: #a78bfa;
+    cursor: default;
+  }
+  .proj-side { text-align: right; }
+
+  /* ──────────────── ABOUT ──────────────── */
+  #about { background: var(--bg); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .about-text p {
+    color: var(--muted2);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    font-size: .98rem;
+  }
+  .about-text p strong { color: var(--text); font-weight: 600; }
+  .about-text p .hl { color: var(--accent); }
+  .about-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .panel-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .panel-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    background: rgba(0,229,255,.07);
+    border: 1px solid rgba(0,229,255,.12);
+    flex-shrink: 0;
+  }
+  .panel-item h4 {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: .95rem;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .panel-item p { font-size: .85rem; color: var(--muted); line-height: 1.55; }
+
+  /* ──────────────── CONTACT ──────────────── */
+  #contact { background: var(--bg2); }
+  .contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .contact-left p {
+    color: var(--muted2);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 36px;
+  }
+  .contact-links { display: flex; flex-direction: column; gap: 14px; }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    transition: border-color .2s, transform .2s, background .2s;
+  }
+  .contact-link:hover {
+    border-color: var(--border2);
+    transform: translateX(6px);
+    background: rgba(255,255,255,.04);
+  }
+  .cl-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .cl-icon.gh { background: rgba(255,255,255,.06); }
+  .cl-icon.li { background: rgba(10,102,194,.15); }
+  .cl-icon.em { background: rgba(234,67,53,.12); }
+  .cl-info { flex: 1; }
+  .cl-info span {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: .7rem;
+    color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .cl-info strong { font-family: var(--font-body); font-size: .92rem; color: var(--text); }
+  .cl-arrow { color: var(--muted); font-size: .8rem; }
+  .contact-right {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 36px;
+  }
+  .contact-right h3 {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .contact-right p { color: var(--muted2); font-size: .9rem; margin-bottom: 24px; }
+  .form-row { margin-bottom: 16px; }
+  .form-row label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .form-row input,
+  .form-row textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: .9rem;
+    resize: vertical;
+    transition: border-color .2s;
+    outline: none;
+  }
+  .form-row input:focus,
+  .form-row textarea:focus { border-color: rgba(0,229,255,.4); }
+  .form-row textarea { min-height: 100px; }
+  .form-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: #fff;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: .9rem;
+    padding: 14px;
+    border-radius: var(--r);
+    border: none;
+    cursor: pointer;
+    transition: opacity .2s, transform .2s;
+    letter-spacing: .01em;
+    margin-top: 8px;
+  }
+  .form-submit:hover { opacity: .9; transform: translateY(-2px); }
+
+  /* ──────────────── FOOTER ──────────────── */
+  footer {
+    padding: 28px 40px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer p { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); }
+  footer span { color: var(--accent); }
+  .footer-loc {
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ──────────────── SCROLL REVEAL ──────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .65s ease, transform .65s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .2s; }
+  .reveal-delay-3 { transition-delay: .3s; }
+  .reveal-delay-4 { transition-delay: .4s; }
+
+  /* ──────────────── MOBILE ──────────────── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    #hero { padding: 100px 24px 60px; }
+    section { padding: 72px 24px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .contact-wrapper { grid-template-columns: 1fr; }
+    .project-card { grid-template-columns: 1fr; }
+    .proj-side { text-align: left; }
+    footer { padding: 24px; }
+    .hero-stats { gap: 28px; }
+  }
+  @media (max-width: 600px) {
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-ghost { justify-content: center; }
+    .focus-grid { grid-template-columns: 1fr; }
+    .stack-groups { grid-template-columns: 1fr; }
+    .proj-features { grid-template-columns: 1fr; }
+  }
+
+  /* ──────────────── MOBILE NAV OPEN ──────────────── */
+  .mobile-nav {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 60px; left: 0; right: 0;
+    background: rgba(8,11,15,.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    gap: 16px;
+    z-index: 99;
+  }
+  .mobile-nav.open { display: flex; }
+  .mobile-nav a {
+    font-family: var(--font-mono);
+    font-size: .9rem;
+    color: var(--muted2);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-nav a:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAV ═══════════════════ -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">AR<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#focus">Focus</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get in Touch</a>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#focus" onclick="closeMobile()">Focus</a>
+  <a href="#stack" onclick="closeMobile()">Stack</a>
+  <a href="#projects" onclick="closeMobile()">Projects</a>
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">Available for Internships & Entry-Level Roles</div>
+    <h1 class="hero-name">Building <em>scalable<br>backend systems,</em><br>not just interfaces.</h1>
+    <p class="hero-headline">Full Stack Developer — Backend Focused</p>
+    <p class="hero-sub">
+      Focused on API design, system reliability, and real-world applications.
+      I engineer backend infrastructure that handles complexity gracefully —
+      from authentication flows to retry mechanisms and structured error handling.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        View Projects
+      </a>
+      <a href="#contact" class="btn-ghost">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Contact Me
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">3<span>+</span></div>
+        <div class="stat-label">Projects Built</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">REST<span>ful</span></div>
+        <div class="stat-label">API Design</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2<span>×</span></div>
+        <div class="stat-label">Frameworks</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">0<span>.</span>0</div>
+        <div class="stat-label">Unhandled Errors (Goal)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOCUS ═══════════════════ -->
+<section id="focus">
+  <div class="container">
+    <div class="section-label">Core Focus</div>
+    <h2 class="section-title reveal">What I Focus On</h2>
+    <p class="section-sub reveal reveal-delay-1">The principles that guide every system I build.</p>
+    <div class="focus-grid">
+      <div class="focus-card reveal">
+        <div class="focus-icon">⚡</div>
+        <h3>Scalable API Design</h3>
+        <p>Designing RESTful APIs with clean contracts, versioning-ready structures, and predictable response schemas that clients can rely on.</p>
+        <div class="focus-metric">✓ Handled API failures using retry logic</div>
+      </div>
+      <div class="focus-card reveal reveal-delay-1">
+        <div class="focus-icon">🏗️</div>
+        <h3>Clean Backend Architecture</h3>
+        <p>Structuring backend code into separation-of-concerns layers — routes, controllers, services, middleware — for maintainability and testability.</p>
+        <div class="focus-metric">✓ Designed structured backend workflows</div>
+      </div>
+      <div class="focus-card reveal reveal-delay-2">
+        <div class="focus-icon">🛡️</div>
+        <h3>Error Handling & Reliability</h3>
+        <p>Writing systems that fail gracefully: input validation, centralized error handlers, fallback mechanisms, and meaningful HTTP status responses.</p>
+        <div class="focus-metric">✓ Built retry & fallback mechanisms</div>
+      </div>
+      <div class="focus-card reveal reveal-delay-3">
+        <div class="focus-icon">🧠</div>
+        <h3>System Design Thinking</h3>
+        <p>Thinking beyond single endpoints — modeling data flows, database schema relationships, and how subsystems interact at scale before writing code.</p>
+        <div class="focus-metric">✓ Designed vehicle + user data models</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ STACK ═══════════════════ -->
+<section id="stack">
+  <div class="container">
+    <div class="section-label">Technologies</div>
+    <h2 class="section-title reveal">Tech Stack</h2>
+    <p class="section-sub reveal reveal-delay-1">Tools I use to build, ship, and scale.</p>
+    <div class="stack-groups">
+      <div class="stack-group reveal">
+        <div class="group-label">Backend</div>
+        <div class="tech-pills">
+          <span class="pill">Node.js</span>
+          <span class="pill">Express.js</span>
+          <span class="pill">Spring Boot</span>
+          <span class="pill">REST APIs</span>
+          <span class="pill">JWT Auth</span>
+          <span class="pill">Middleware</span>
+        </div>
+      </div>
+      <div class="stack-group reveal reveal-delay-1">
+        <div class="group-label">Frontend</div>
+        <div class="tech-pills">
+          <span class="pill">React</span>
+          <span class="pill">JavaScript</span>
+          <span class="pill">HTML5</span>
+          <span class="pill">CSS3</span>
+        </div>
+      </div>
+      <div class="stack-group reveal reveal-delay-2">
+        <div class="group-label">Databases</div>
+        <div class="tech-pills">
+          <span class="pill">MySQL</span>
+          <span class="pill">MongoDB</span>
+          <span class="pill">Schema Design</span>
+        </div>
+      </div>
+      <div class="stack-group reveal reveal-delay-3">
+        <div class="group-label">Concepts</div>
+        <div class="tech-pills">
+          <span class="pill">DSA</span>
+          <span class="pill">System Design</span>
+          <span class="pill">API Design</span>
+          <span class="pill">Error Handling</span>
+          <span class="pill">CRUD Design</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PROJECTS ═══════════════════ -->
+<section id="projects">
+  <div class="container">
+    <div class="section-label">Work</div>
+    <h2 class="section-title reveal">Projects</h2>
+    <p class="section-sub reveal reveal-delay-1">Real systems built with a backend-first mindset.</p>
+    <div class="projects-list">
+
+      <!-- Project 1: QuizMaster -->
+      <div class="project-card reveal">
+        <div>
+          <div class="proj-top">
+            <span class="proj-num">01</span>
+            <div>
+              <div class="proj-name">QuizMaster</div>
+            </div>
+            <span class="proj-tag fullstack">Full Stack</span>
+          </div>
+          <p class="proj-desc">
+            A full-stack quiz platform where users can take configurable quizzes with real-time scoring. 
+            The backend integrates with an external trivia API, implements a retry mechanism for failed 
+            requests, and falls back to local question sets — ensuring the experience remains reliable 
+            regardless of third-party API availability.
+          </p>
+          <div class="proj-features">
+            <div class="feat">Configurable quiz settings (category, difficulty, count)</div>
+            <div class="feat">Real-time scoring with instant feedback</div>
+            <div class="feat">External REST API integration</div>
+            <div class="feat">Retry & fallback mechanism on API failure</div>
+            <div class="feat">Clean response normalization layer</div>
+            <div class="feat">Structured backend error handling</div>
+          </div>
+          <div class="proj-tech">
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">Node.js</span>
+            <span class="tech-tag">Express</span>
+            <span class="tech-tag">REST APIs</span>
+            <span class="tech-tag">Axios</span>
+          </div>
+          <div class="proj-actions">
+            <a href="https://quizzmasterr.vercel.app/" class="proj-btn live">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Live Demo
+            </a>
+            <a href="https://github.com/Aaaaayush01/quizmaster-frontend" target="_blank" class="proj-btn github">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2: TaskForge -->
+      <div class="project-card reveal reveal-delay-1">
+        <div>
+          <div class="proj-top">
+            <span class="proj-num">02</span>
+            <div>
+              <div class="proj-name">TaskForge</div>
+            </div>
+            <span class="proj-tag backend">Backend-Heavy</span>
+          </div>
+          <p class="proj-desc">
+            A task management system built around a secure, well-structured REST API backend. 
+            The focus was on building production-quality backend patterns: JWT-based stateless 
+            authentication, protected route middleware, comprehensive CRUD operations, server-side 
+            validation, and centralized error handling — fronted by a clean Kanban-style interface.
+          </p>
+          <div class="proj-features">
+            <div class="feat">JWT-based authentication & protected routes</div>
+            <div class="feat">Full CRUD operations on tasks</div>
+            <div class="feat">Kanban workflow (To Do / In Progress / Done)</div>
+            <div class="feat">Backend input validation on all endpoints</div>
+            <div class="feat">Centralized error handling middleware</div>
+            <div class="feat">Stateless session management via tokens</div>
+          </div>
+          <div class="proj-tech">
+            <span class="tech-tag">Node.js</span>
+            <span class="tech-tag">Express</span>
+            <span class="tech-tag">JavaScript</span>
+            <span class="tech-tag">JWT</span>
+            <span class="tech-tag">REST API</span>
+          </div>
+          <div class="proj-actions">
+            <a href="https://taskforge-task-management.vercel.app/" class="proj-btn live">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Live Demo
+            </a>
+            <a href="https://github.com/Aaaaayush01/task-management-backend" target="_blank" class="proj-btn github">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3: Fleet Management -->
+      <div class="project-card ongoing reveal reveal-delay-2">
+        <div>
+          <div class="proj-top">
+            <span class="proj-num">03</span>
+            <div>
+              <div class="proj-name">Fleet Management System</div>
+            </div>
+            <span class="proj-tag ongoing">Ongoing</span>
+          </div>
+          <p class="proj-desc">
+            An ongoing backend-focused project for managing vehicle fleets and associated user data. 
+            The emphasis is on building a well-structured, scalable REST API foundation — with 
+            clearly separated concerns, robust data validation on all write operations, and 
+            error handling patterns that make the system predictable to consume.
+          </p>
+          <div class="proj-features">
+            <div class="feat">REST APIs for vehicle & driver data management</div>
+            <div class="feat">Scalable, layered backend architecture</div>
+            <div class="feat">Data validation on all write endpoints</div>
+            <div class="feat">Structured error responses with status codes</div>
+            <div class="feat">Separation of routes, controllers, services</div>
+            <div class="feat">Designed for extensibility (auth, reports)</div>
+          </div>
+          <div class="proj-tech">
+            <span class="tech-tag">Node.js</span>
+            <span class="tech-tag">Express</span>
+            <span class="tech-tag">REST API</span>
+            <span class="tech-tag">MySQL</span>
+          </div>
+          <div class="proj-actions">
+            <span class="proj-btn wip">
+              🚧 In Progress
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ABOUT ═══════════════════ -->
+<section id="about">
+  <div class="container">
+    <div class="section-label">About</div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <h2 class="section-title" style="margin-bottom:24px;">The Engineer<br>Behind the APIs</h2>
+        <p>
+          I'm <strong>Ayush Ranjan</strong>, a <span class="hl">backend-focused full stack developer</span> based in Bengaluru, India. 
+          My interest lies in what happens behind the interface — how data flows, how systems stay reliable under load, 
+          and how APIs can be designed to be intuitive and resilient at the same time.
+        </p>
+        <p>
+          I approach every project with a <strong>reliability-first mindset</strong>. Before writing the first endpoint, 
+          I think through failure modes — what happens when a third-party service goes down, what happens when a user sends 
+          malformed data, and how the system communicates errors clearly.
+        </p>
+        <p>
+          Outside of building, I actively practise <span class="hl">Data Structures & Algorithms</span> and study 
+          <strong>system design concepts</strong> — not because interviews demand it, but because understanding 
+          these fundamentals makes me a better engineer when architecting real systems.
+        </p>
+        <p>
+          I'm currently looking for <strong>internship</strong> or <strong>entry-level backend/full-stack opportunities</strong> 
+          where I can contribute to real systems, learn from experienced engineers, and keep building things that matter.
+        </p>
+      </div>
+      <div class="about-panel reveal reveal-delay-2">
+        <div class="panel-item">
+          <div class="panel-icon">🎯</div>
+          <div>
+            <h4>Backend Engineering Mindset</h4>
+            <p>I care more about what powers the UI than the UI itself — API contracts, data integrity, and system behaviour under failure.</p>
+          </div>
+        </div>
+        <div class="panel-item">
+          <div class="panel-icon">🔍</div>
+          <div>
+            <h4>Problem-Solving Approach</h4>
+            <p>I break problems into layers: data model first, then business logic, then the API surface — before any UI work.</p>
+          </div>
+        </div>
+        <div class="panel-item">
+          <div class="panel-icon">📐</div>
+          <div>
+            <h4>Scalability Thinking</h4>
+            <p>Even in small projects, I structure code for growth — modular services, clean separation, and room to extend.</p>
+          </div>
+        </div>
+        <div class="panel-item">
+          <div class="panel-icon">📍</div>
+          <div>
+            <h4>Location</h4>
+            <p>Bengaluru, India — open to remote, hybrid, and in-person roles.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CONTACT ═══════════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title reveal">Let's Connect</h2>
+    <div class="contact-wrapper">
+      <div class="contact-left reveal">
+        <p>
+          I'm actively looking for backend or full-stack internship and entry-level opportunities. 
+          If you're building something interesting and need an engineer who thinks in systems, 
+          I'd love to talk.
+        </p>
+        <div class="contact-links">
+          <a href="https://github.com/ayushranjan" target="_blank" class="contact-link">
+            <div class="cl-icon gh">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </div>
+            <div class="cl-info">
+              <span>GitHub</span>
+              <strong>github.com/ayushranjan</strong>
+            </div>
+            <span class="cl-arrow">→</span>
+          </a>
+          <a href="https://linkedin.com/in/ayushranjan" target="_blank" class="contact-link">
+            <div class="cl-icon li">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </div>
+            <div class="cl-info">
+              <span>LinkedIn</span>
+              <strong>linkedin.com/in/ayushranjan</strong>
+            </div>
+            <span class="cl-arrow">→</span>
+          </a>
+          <a href="mailto:ayushranjan@email.com" class="contact-link">
+            <div class="cl-icon em">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="cl-info">
+              <span>Email</span>
+              <strong>ayushranjan@email.com</strong>
+            </div>
+            <span class="cl-arrow">→</span>
+          </a>
+        </div>
+      </div>
+      <div class="contact-right reveal reveal-delay-2">
+        <h3>Send a Message</h3>
+        <p>Have a role or project in mind? Drop a quick note.</p>
+        <div class="form-row">
+          <label>Name</label>
+          <input type="text" id="name" placeholder="Your name" />
+        </div>
+        <div class="form-row">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="your@email.com" />
+        </div>
+        <div class="form-row">
+          <label>Message</label>
+          <textarea id="message" placeholder="Tell me about the opportunity or say hello..."></textarea>
+        </div>
+        <button class="form-submit" onclick="handleSubmit(this)">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <p>© 2025 <span>Ayush Ranjan</span> — Designed & Built from scratch</p>
+  <div class="footer-loc">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Bengaluru, India
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  // ── NAV SCROLL
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ── HAMBURGER
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  hamburger.addEventListener('click', () => {
+    mobileNav.classList.toggle('open');
+  });
+  function closeMobile() { mobileNav.classList.remove('open'); }
+
+  // ── SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── FORM SUBMIT
+  function handleSubmit(btn) {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const message = document.getElementById("message").value.trim();
+
+  if (!name || !email || !message) {
+    btn.textContent = "⚠️ Fill all fields";
+    return;
+  }
+
+  btn.textContent = "Sending...";
+
+  emailjs.send("service_6pw1f18", "template_p5jl7dx", {
+    from_name: name,
+    from_email: email,
+    message: message
+  })
+  .then(() => {
+    btn.textContent = "✓ Message Sent!";
+    btn.style.background = "linear-gradient(135deg, #00d97e, #00b860)";
+
+    // reset form
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("message").value = "";
+
+    setTimeout(() => {
+      btn.textContent = "Send Message →";
+      btn.style.background = "";
+    }, 3000);
+  })
+  .catch(() => {
+    btn.textContent = "❌ Failed. Try again.";
+
+    setTimeout(() => {
+      btn.textContent = "Send Message →";
+    }, 3000);
+  });
+}
+
+  // ── HERO ENTRANCE
+  document.querySelectorAll('.hero-badge, .hero-role, .hero-name, .hero-headline, .hero-sub, .hero-actions, .hero-stats').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity .6s ease ${i * 0.1}s, transform .6s ease ${i * 0.1}s`;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    });
+  });
+</script>
+
+
+<script>
+  (function() {
+    emailjs.init("ZtDTkAytjfmLKoj08"); // from EmailJS dashboard
+  })();
+</script>
+</body>
+</html>
